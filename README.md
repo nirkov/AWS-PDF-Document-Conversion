@@ -67,4 +67,4 @@ Repeatedly:
 - If an exception occurs, then the worker should recover from it, send a message to the manager of the input message that caused the       exception together with a short description of the exception, and continue working on the next message.
 - If a worker stops working unexpectedly before finishing its work on a message, then some other worker should be able to handle that     message.
 
-@DONE :+1::+1::+1:
+@Done :+1:
