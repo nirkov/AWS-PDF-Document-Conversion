@@ -53,4 +53,18 @@ The manager process resides on an EC2 node. It checks a special SQS queue for me
   - Creates response messages for the jobs, if needed.
   - Terminates.
 
+## Slave
+A slave process resides on an EC2 node. Its life cycle is as follows:
+Repeatedly:
+ - Get a message from an SQS queue.
+ - Download the PDF file indicated in the message.
+ - Perform the operation requested on the file.
+ - Upload the resulting output file to S3.
+ - Put a message in an SQS queue indicating the original URL of the PDF, the S3 url of the new image file, and the operation that was      performed.
+ - remove the processed message from the SQS queue.
+ 
+**IMPORTANT**:
+- If an exception occurs, then the worker should recover from it, send a message to the manager of the input message that caused the       exception together with a short description of the exception, and continue working on the next message.
+- If a worker stops working unexpectedly before finishing its work on a message, then some other worker should be able to handle that     message.
 
+@DONE!! :+1::+1::+1:
