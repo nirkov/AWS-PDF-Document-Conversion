@@ -18,7 +18,7 @@ Example to input file: [GitHub Pages](https://github.com/nirkov/AWS-PDF-Document
 
 ## Output file format:
 The output is an HTML file containing a line for each input line. The format of each line is as follows:
-> <operation>: input file output file.
+> [<operation>: input file output file.]
  
  where:
  - Operation is one of the possible operations.
