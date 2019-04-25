@@ -27,3 +27,30 @@ The output is an HTML file containing a line for each input line. The format of 
 
 If an exception occurs while performing an operation on a PDF file, or the PDF file is not available, then output line for this file will be: 
 > operation: input file,  a short description of the exception.
+
+## LocalApp:
+The application resides on a local (non-cloud) machine. Once started, it reads the input file from the user, and:
+ - Checks if a Manager node is active on the EC2 cloud. If it is not, the application will start the manager node.
+ - Uploads the file to S3.
+ - Sends a message to an SQS queue, stating the location of the file on S3
+ - Checks an SQS queue for a message indicating the process is done and the response (the summary file) is available on S3.
+ - Downloads the summary file from S3, and create an html file representing the results.
+ - Sends a termination message to the Manager if it was supplied as one of its input arguments.
+ 
+ ## Manager:
+The manager process resides on an EC2 node. It checks a special SQS queue for messages from local applications. Once it receives a message it:
+1.If the message is that of a new task it:
+  - Downloads the input file from S3.
+  - Creates an SQS message for each URL in the input file together with the operation that should be performed on it.
+  - Checks the SQS message count and starts Worker processes (nodes) accordingly.
+    - The manager should create a worker for every n messages, if there are no running workers.
+    - If there are k active workers, and the new job requires m workers, then the manager should create m-k new workers, if possible.
+    - Note that while the manager creates a node for every n messages, it does not delegate messages to specific nodes. All of the             worker nodes take their messages from the same SQS queue; so it might be the case that with 2n messages, hence two worker nodes,         one node processed n+(n/2) messages, while the other processed only n/2.
+
+2.If the message is a termination message, then the manager:
+  - Does not accept any more input files from local applications.
+  - Waits for all the workers to finish their job, and then terminates them.
+  - Creates response messages for the jobs, if needed.
+  - Terminates.
+
+
