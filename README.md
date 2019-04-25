@@ -13,4 +13,13 @@ Each line in the input file will contain an operation followed by a tab ("\t") a
  - ToImage - convert the first page of the PDF file to a "png" image.
  - ToHTML - convert the first page of the PDF file to an HTML file.
  - ToText - convert the first page of the PDF file to a text file.
+ 
+Example to input file: [GitHub Pages](https://github.com/nirkov/AWS-PDF-Document-Conversion/blob/master/input.txt).
 
+## Output file format:
+The output is an HTML file containing a line for each input line. The format of each line is as follows: > <operation>: input file output file, where:
+ - Operation is one of the possible operations.
+ - Input file is a link to the input PDF file.
+ - Output file is a link to the image/text/HTML output file.
+
+If an exception occurs while performing an operation on a PDF file, or the PDF file is not available, then output line for this file will be: > <operation>: input file <a short description of the exception>.
