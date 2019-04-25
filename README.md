@@ -13,3 +13,4 @@ Each line in the input file will contain an operation followed by a tab ("\t") a
  - ToImage - convert the first page of the PDF file to a "png" image.
  - ToHTML - convert the first page of the PDF file to an HTML file.
  - ToText - convert the first page of the PDF file to a text file.
+
