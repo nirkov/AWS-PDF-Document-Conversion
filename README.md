@@ -90,3 +90,34 @@ Repeatedly:
 
 
 ![image](https://user-images.githubusercontent.com/32679759/59013480-bc4ea300-8842-11e9-9e09-fb6f3ce8de93.png)
+
+
+# A convenient way to convert a JAVA project into a JAR file with IntelliJ IDEA -
+
+## In order to run the java files on EC2 instances it is necessary to convert each of the components of
+## the project, which run independently (Slaves and Manager), to JAR files, which are uploaded to the s3 bucket from which we
+## draw the files and run them on Amazon machines.
+## This is a simple guide how to convert the project to JAR file.
+
+1. **Creating artifact**
+  - Go to the project structure
+  
+![project structure](https://user-images.githubusercontent.com/32679759/59016218-6af5e200-8849-11e9-895a-5aa15d5a03e7.png)
+
+  - **Create a new artifact** 
+  
+![new artifacts](https://user-images.githubusercontent.com/32679759/59016233-76490d80-8849-11e9-93d5-e338a67bc6fd.png)
+
+  - **Select the main class you want to convert**
+  
+![create jar from module](https://user-images.githubusercontent.com/32679759/59016254-82cd6600-8849-11e9-89fe-28a5131cd553.png)
+  
+** ***MAKE SURE YOU CHANGE THE MANIFEST FOLDER*** **
+
+![change the manifest folder](https://user-images.githubusercontent.com/32679759/59016268-8bbe3780-8849-11e9-8aab-b47851d74d76.png)
+
+  - **Click OK will bring you to the window where you choose the dependencies. You can simpley click ok if this is a Maven project.**
+  
+  - **Build your artifact with "rebuild". It will create an "out" folder with your jar file and its dependencies in the project folder.**
+  
+build artifact
