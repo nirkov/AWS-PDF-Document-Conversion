@@ -71,8 +71,8 @@ Repeatedly:
 1. Local Application uploads the file with the list of PDF files and operations to S3.
 2. Local Application sends a message (queue) stating the location of the input file on S3.
 3. Local Application does one of the two:
-  - Starts the manager.
-  - Checks if a manager is active and if not, starts it.
+   - Starts the manager.
+   - Checks if a manager is active and if not, starts it.
 4. Manager downloads list of PDF files together with the operations.
 5. Manager creates an SQS message for each URL and operation from the input list.
 6. Manager bootstraps nodes to process messages.
