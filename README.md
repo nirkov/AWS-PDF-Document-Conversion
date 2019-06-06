@@ -94,10 +94,10 @@ Repeatedly:
 
 # A convenient way to convert a JAVA project into a JAR file with IntelliJ IDEA -
 
-## In order to run the java files on EC2 instances it is necessary to convert each of the components of
-## the project, which run independently (Slaves and Manager), to JAR files, which are uploaded to the s3 bucket from which we
-## draw the files and run them on Amazon machines.
-## This is a simple guide how to convert the project to JAR file.
+ In order to run the java files on EC2 instances it is necessary to convert each of the components of
+ the project, which run independently (Slaves and Manager), to JAR files, which are uploaded to the s3 bucket from which we
+ draw the files and run them on Amazon machines.
+ This is a simple guide how to convert the project to JAR file.
 
 1. **Creating artifact**
   - Go to the project structure
