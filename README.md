@@ -2,10 +2,10 @@
 Distributively process a list of PDF files, perform some operations on them, and display the result on a web page.
 
 ## Details:
-The application is composed of a local application and instances running on the Amazon cloud. The application will get as an input a text file containing a list of URLs of PDF files with an operation to perform on them. Then, instances will be launched in AWS (workers). Each worker will download PDF files, perform the requested operation, and display the result of the operation on a webpage.
+The application is composed of a local application and instances running on the Amazon cloud. The application will get as an input a text file containing a list of URLs of PDF files with an operation to perform on them. Then, instances will be launched in AWS (slaves). Each slave will download PDF files, perform the requested operation, and display the result of the operation on a webpage.
 The use-case is as follows:
 
-User starts the application and supplies as input a file with URLs of PDF files together with operations to perform on them, an integer n stating how many PDF files per worker, and an optional argument terminate, if received the local application sends a terminate message to the Manager.
+User starts the application and supplies as input a file with URLs of PDF files together with operations to perform on them, an integer n stating how many PDF files per slave, and an optional argument terminate, if received the local application sends a terminate message to the Manager.
 User gets back an html file containing PDF files after the result of the operation performed on them.
 
 ## Input File Format:
@@ -42,14 +42,14 @@ The manager process resides on an EC2 node. It checks a special SQS queue for me
 1.If the message is that of a new task it:
   - Downloads the input file from S3.
   - Creates an SQS message for each URL in the input file together with the operation that should be performed on it.
-  - Checks the SQS message count and starts Worker processes (nodes) accordingly.
-    - The manager should create a worker for every n messages, if there are no running workers.
-    - If there are k active workers, and the new job requires m workers, then the manager should create m-k new workers, if possible.
-    - Note that while the manager creates a node for every n messages, it does not delegate messages to specific nodes. All of the             worker nodes take their messages from the same SQS queue; so it might be the case that with 2n messages, hence two worker nodes,         one node processed n+(n/2) messages, while the other processed only n/2.
+  - Checks the SQS message count and starts slave processes (nodes) accordingly.
+    - The manager should create a slave for every n messages, if there are no running slaves.
+    - If there are k active slaves, and the new job requires m slaves, then the manager should create m-k new slaves, if possible.
+    - Note that while the manager creates a node for every n messages, it does not delegate messages to specific nodes. All of the             slave nodes take their messages from the same SQS queue; so it might be the case that with 2n messages, hence two slave nodes,         one node processed n+(n/2) messages, while the other processed only n/2.
 
 2.If the message is a termination message, then the manager:
   - Does not accept any more input files from local applications.
-  - Waits for all the workers to finish their job, and then terminates them.
+  - Waits for all the slaves to finish their job, and then terminates them.
   - Creates response messages for the jobs, if needed.
   - Terminates.
 
@@ -64,7 +64,29 @@ Repeatedly:
  - remove the processed message from the SQS queue.
  
 **IMPORTANT**:
-- If an exception occurs, then the worker should recover from it, send a message to the manager of the input message that caused the       exception together with a short description of the exception, and continue working on the next message.
-- If a worker stops working unexpectedly before finishing its work on a message, then some other worker should be able to handle that     message.
+- If an exception occurs, then the slave should recover from it, send a message to the manager of the input message that caused the       exception together with a short description of the exception, and continue working on the next message.
+- If a slave stops working unexpectedly before finishing its work on a message, then some other slave should be able to handle that     message.
+
+## System Summary
+1. Local Application uploads the file with the list of PDF files and operations to S3.
+2. Local Application sends a message (queue) stating the location of the input file on S3.
+3. Local Application does one of the two:
+  - Starts the manager.
+  - Checks if a manager is active and if not, starts it.
+4. Manager downloads list of PDF files together with the operations.
+5. Manager creates an SQS message for each URL and operation from the input list.
+6. Manager bootstraps nodes to process messages.
+7. Worker gets a message from an SQS queue.
+8. Worker downloads the PDF file indicated in the message.
+9. Worker performs the requested operation on the PDF file, and uploads the resulting output to S3.
+10. Worker puts a message in an SQS queue indicating the original URL of the PDF file and the S3 URL of the output file, together with the operation that produced it.
+11. Manager reads all Workers' messages from SQS and creates one summary file, once all URLs in the input file have been processed.
+12. Manager uploads the summary file to S3.
+13. Manager posts an SQS message about the summary file.
+14. Local Application reads SQS message.
+15. Local Application downloads the summary file from S3.
+16. Local Application creates html output file.
+17. Local application send a terminate message to the manager if it received terminate as one of its arguments.
 
 
+![image](https://user-images.githubusercontent.com/32679759/59013480-bc4ea300-8842-11e9-9e09-fb6f3ce8de93.png)
