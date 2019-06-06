@@ -92,7 +92,7 @@ Repeatedly:
 ![image](https://user-images.githubusercontent.com/32679759/59013480-bc4ea300-8842-11e9-9e09-fb6f3ce8de93.png)
 
 
-# A convenient way to convert a JAVA project into a JAR file with IntelliJ IDEA -
+# A convenient way to convert a JAVA project into a JAR file with IntelliJ IDEA Community Edition 2019 -
 
  In order to run the java files on EC2 instances it is necessary to convert each of the components of
  the project, which run independently (Slaves and Manager), to JAR files, which are uploaded to the s3 bucket from which we
