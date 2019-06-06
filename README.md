@@ -53,7 +53,7 @@ The manager process resides on an EC2 node. It checks a special SQS queue for me
   - Creates response messages for the jobs, if needed.
   - Terminates.
 
-## Slave
+## Slave:
 A slave process resides on an EC2 node. Its life cycle is as follows:
 Repeatedly:
  - Get a message from an SQS queue.
