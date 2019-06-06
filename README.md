@@ -121,4 +121,5 @@ Repeatedly:
   - **Build your artifact with "rebuild". It will create an "out" folder with your jar file and its dependencies in the project folder.**
   
  - build artifact
+ 
  ![Build the artifacts](https://user-images.githubusercontent.com/32679759/59016304-a0023480-8849-11e9-86fb-ca003a65c020.png)
