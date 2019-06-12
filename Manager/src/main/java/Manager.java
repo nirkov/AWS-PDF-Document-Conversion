@@ -30,11 +30,11 @@ import java.util.concurrent.Executors;
 
 
 public class Manager {
-    private static final int                   THREAS_NUMBER      = 10;
-    private static final String                INSTANCE_URL       = "http://169.254.169.254/latest/meta-data/instance-id";
+    private static final int                   THREAS_NUMBER = 10;
+    private static final String                INSTANCE_URL  = "http://169.254.169.254/latest/meta-data/instance-id";
 
-    private static Map<String,Integer>         tasksMap           = new ConcurrentHashMap<String, Integer>();       //How many tasks left for file.
-    private static Map<String,OutputFileMaker> ansMap             = new ConcurrentHashMap<String, OutputFileMaker>();       //The ans for each file
+    private static Map<String,Integer>         tasksMap = new ConcurrentHashMap<String, Integer>();         //How many tasks left for file.
+    private static Map<String,OutputFileMaker> ansMap   = new ConcurrentHashMap<String, OutputFileMaker>(); //The ans for each file
 
     private static AmazonS3  s3  = AmazonS3ClientBuilder.standard().withRegion("us-east-1").build();  //To work on server
     private static AmazonSQS sqs = AmazonSQSClientBuilder.standard().withRegion("us-east-1").build(); //To work on server
